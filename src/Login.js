@@ -7,37 +7,37 @@ const Login = ({ onLogin }) => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-//   const handleFinish = (values) => {
-//     setLoading(true);
-//     if (values.username === 'admin' && values.password === '123456') {
-//       message.success('登录成功');
-//       onLogin();
-//       navigate('/admin', { replace: true });
-//     } else {
-//       message.error('用户名或密码错误');
-//     }
-//     setLoading(false);
-//   };
-
-const handleFinish = async (values) => {
+  const handleFinish = (values) => {
     setLoading(true);
-    try {
-      const response = await axios.post('http://localhost:8080/login', values);
-      const result = response.data;
-      console.log('登录返回结果：', result); // 方便调试
-      if (result.code === 200) {
-        localStorage.setItem('token', result.data);
-        message.success('登录成功');
-        onLogin();
-        navigate('/Admin', { replace: true });
-      } else {
-        message.error('登录失败');
-      }
-    } catch (error) {
-      message.error('网络错误');
+    if (values.username === 'admin' && values.password === '123456') {
+      message.success('登录成功');
+      onLogin();
+      navigate('/admin', { replace: true });
+    } else {
+      message.error('用户名或密码错误');
     }
     setLoading(false);
   };
+
+// const handleFinish = async (values) => {
+//     setLoading(true);
+//     try {
+//       const response = await axios.post('http://localhost:8080/login', values);
+//       const result = response.data;
+//       console.log('登录返回结果：', result); // 方便调试
+//       if (result.code === 200) {
+//         localStorage.setItem('token', result.data);
+//         message.success('登录成功');
+//         onLogin();
+//         navigate('/Admin', { replace: true });
+//       } else {
+//         message.error('登录失败');
+//       }
+//     } catch (error) {
+//       message.error('网络错误');
+//     }
+//     setLoading(false);
+//   };
 
   return (
     <div style={{ maxWidth: 300, margin: '100px auto' }}>

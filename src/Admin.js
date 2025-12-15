@@ -1,76 +1,19 @@
-import { UploadOutlined, UserOutlined, VideoCameraOutlined } from '@ant-design/icons';
+import { UserOutlined, FormOutlined } from '@ant-design/icons'; 
 import { Layout, Menu } from 'antd';
-import React, { useState, useEffect } from 'react';
-import { Routes, Route, useNavigate, useLocation, Navigate } from 'react-router-dom';
-import SearchUser from './components/SearchUser';
-import UserTab from './components/UserTable';
+import React, { useState } from 'react';
+import UserTable      from './components/UserTable';
 import SearchQuestion from './components/SearchQuestion';
-import QuestionTab from './components/QuestionTable';
+import QuestionTable  from './components/QuestionTable';
 
 const { Header, Footer, Sider, Content } = Layout;
 
 const Admin = () => {
-  const navigate = useNavigate();
-  const location = useLocation();
-  
-  const getSelectedKey = () => {
-    if (location.pathname === '/question') return '2';
-    return '1'; 
-  };
-  
-  const [selectedKey, setSelectedKey] = useState(getSelectedKey());
-  const [userSearchKeyword, setUserSearchKeyword] = useState('');
-  const [userRefreshFlag, setUserRefreshFlag] = useState(0);
-  const [questionSearchKeyword, setQuestionSearchKeyword] = useState('');
-  const [questionRefreshFlag, setQuestionRefreshFlag] = useState(0);
-
-  useEffect(() => {
-    setSelectedKey(getSelectedKey());
-  }, [location]);
-
- 
-  const handleUserSearch = (keyword) => {
-    console.log('用户搜索:', keyword);
-    setUserSearchKeyword(keyword);
-  };
-
-  
-  const handleUserAddSuccess = () => {
-    console.log('用户添加成功，刷新用户列表');
-    setUserRefreshFlag(prev => prev + 1);
-  };
-
-
-  const handleQuestionSearch = (keyword) => {
-    console.log('题目搜索:', keyword);
-    setQuestionSearchKeyword(keyword);
-  };
-
-
-  const handleQuestionAddSuccess = () => {
-    console.log('题目添加成功，刷新题目列表');
-    setQuestionRefreshFlag(prev => prev + 1);
-  };
-
-
-  const handleMenuClick = ({ key }) => {
-    setSelectedKey(key);
-    if (key === '1') {
-      navigate('/user');
-    } else if (key === '2') {
-      navigate('/question');
-    }
-  };
+  const [selectedKey, setSelectedKey] = useState('1');
 
   return (
-    <Layout>
-      <Header style={{ 
-        display: 'flex', 
-        justifyContent: 'space-between', 
-        alignItems: 'center',
-        background: '#001529'
-      }}>
-        <h1 style={{color:'#ffffff', margin: 0}}>Quiz管理系统</h1>
+    <Layout style={{ minHeight: '100vh' }}>
+      <Header>
+        <h1 style={{ color: '#fff', margin: 0, fontSize: 20 }}>Quiz管理系统</h1>
       </Header>
       <Layout>
         <Sider>
@@ -78,47 +21,25 @@ const Admin = () => {
             theme="dark"
             mode="inline"
             selectedKeys={[selectedKey]}
-            onClick={handleMenuClick}
+            onClick={({ key }) => setSelectedKey(key)}
             items={[
               { key: '1', icon: <UserOutlined />, label: '用户管理' },
-              { key: '2', icon: <VideoCameraOutlined />, label: '题目管理' }
+              { key: '2', icon: <FormOutlined />, label: '题目管理' }, 
             ]}
           />
         </Sider>
-        <Content style={{ padding: '20px', minHeight: 'calc(100vh - 134px)' }}>
-       <Routes>
-     
-          <Route path="/" element={<Navigate to="/user" replace />} />
-          
-          <Route path="/user" element={
+        <Content style={{ padding: 16 }}>
+          {selectedKey === '1' && <UserTable />}
+          {selectedKey === '2' && (
             <>
-              <SearchUser 
-                onSearch={handleUserSearch}
-                onAddSuccess={handleUserAddSuccess}
-              />
-              <UserTab 
-                searchKeyword={userSearchKeyword}
-                refreshFlag={userRefreshFlag}
-              />
+              <SearchQuestion />
+              <QuestionTable />
             </>
-          } />
-          <Route path="/question" element={
-            <>
-              <SearchQuestion 
-                onSearch={handleQuestionSearch}
-                onAddSuccess={handleQuestionAddSuccess}
-              />
-              <QuestionTab 
-                searchKeyword={questionSearchKeyword}
-                refreshFlag={questionRefreshFlag}
-              />
-            </>
-          } />
-        </Routes>
+          )}
         </Content>
       </Layout>
       <Footer style={{ textAlign: 'center' }}>
-        Quiz管理系统 ©2025 Created by qingliul
+        Quiz管理系统 ©2025 Created by yqzhou
       </Footer>
     </Layout>
   );
